@@ -23,8 +23,6 @@ from werkzeug.exceptions import NotFound
 from werkzeug.http import http_date, is_resource_modified
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.middleware.http_proxy import ProxyMiddleware
-from werkzeug.middleware.shared_data import SharedDataMiddleware
-from werkzeug.security import safe_join
 from werkzeug.serving import run_simple
 from werkzeug.utils import get_content_type
 from werkzeug.wsgi import get_path_info, wrap_file
@@ -202,6 +200,9 @@ def load_api_app(application: str):
 
 
 def run():
+    # add running folder to import path
+    sys.path.insert(0, ".")
+
     parser = argparse.ArgumentParser(
         description="mullet - quick'n dirty SPA proxy", add_help=False
     )
