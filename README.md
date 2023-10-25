@@ -27,3 +27,10 @@ Proxy a local Flask or Pokie API application on "/slug"  and a development SPA a
 $ mullet --slug "/slug"
 ```
 
+## Static Serving
+
+If a local folder is specified for frontend serving, mullet will always serve contents, even if the required resource 
+doesn't exist. The behaviour is as follows:
+- empty or non-existing routes are served as /index.html (or other index file name you may have specified);
+- existing files are served as files (mimetypes is used to attempt to identify the correct mime type);
+- existing directories are served as /index.html (or other index file name you may have specified);
