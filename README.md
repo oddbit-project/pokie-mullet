@@ -5,6 +5,12 @@
 Barebones HTTP proxy for Python-powered SPA applications - Mounts a Flask or Pokie application on a slug (/api by default)
 and proxies all other requests to a running HTTP server (such as a NodeJS dev server), or to a static SPA on a folder. 
 
+## Installation
+
+```shell
+$ pip3 install pokie-mullet
+```
+
 ## Basic Usage
 
 Show usage parameters:
