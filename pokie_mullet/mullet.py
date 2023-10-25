@@ -41,17 +41,16 @@ def error(msg, code=-1):
 
 
 class RootProxy(ProxyMiddleware):
-
     def __init__(
-            self,
-            app: "WSGIApplication",
-            target,
-            chunk_size: int = 2 << 13,
-            timeout: int = 10,
-            remove_prefix: bool = False,
-            host: str = "<auto>",
-            headers: dict = None,
-            ssl_context=None
+        self,
+        app: "WSGIApplication",
+        target,
+        chunk_size: int = 2 << 13,
+        timeout: int = 10,
+        remove_prefix: bool = False,
+        host: str = "<auto>",
+        headers: dict = None,
+        ssl_context=None,
     ) -> None:
         super().__init__(app, {}, chunk_size, timeout)
         self.opts = {
@@ -59,7 +58,7 @@ class RootProxy(ProxyMiddleware):
             "remove_prefix": remove_prefix,
             "host": host,
             "headers": {} if not headers else headers,
-            "ssl_context": ssl_context
+            "ssl_context": ssl_context,
         }
 
     def __call__(self, environ: "WSGIEnvironment", start_response: "StartResponse"):
@@ -69,15 +68,14 @@ class RootProxy(ProxyMiddleware):
 
 
 class StaticMiddleware:
-
     def __init__(
-            self,
-            app: "WSGIApplication",
-            root_path: str,
-            index: str = "index.html",
-            cache: bool = True,
-            cache_timeout: int = 60 * 60 * 12,
-            fallback_mimetype: str = "application/octet-stream",
+        self,
+        app: "WSGIApplication",
+        root_path: str,
+        index: str = "index.html",
+        cache: bool = True,
+        cache_timeout: int = 60 * 60 * 12,
+        fallback_mimetype: str = "application/octet-stream",
     ) -> None:
         self.app = app
         self.cache = cache
@@ -166,9 +164,12 @@ def frontend_factory(path, index_file, parent=NotFound()):
 
 def create_app(flask_app, api_slug, frontend, index_file):
     frontend_app = frontend_factory(frontend, index_file)
-    app = DispatcherMiddleware(frontend_app, {
-        api_slug: flask_app,
-    })
+    app = DispatcherMiddleware(
+        frontend_app,
+        {
+            api_slug: flask_app,
+        },
+    )
     return app
 
 
@@ -186,7 +187,11 @@ def load_api_app(application: str):
         api_module = importlib.import_module(module)
     except ModuleNotFoundError:
         if module.endswith(".py") and os.path.exists(module):
-            error("Application '{}' not found, did you mean '{}:{}'?".format(module, module.rsplit(".", 1)[0], var))
+            error(
+                "Application '{}' not found, did you mean '{}:{}'?".format(
+                    module, module.rsplit(".", 1)[0], var
+                )
+            )
         error("Application '{}' not found".format(module))
 
     api_app = getattr(api_module, var, None)
@@ -198,8 +203,7 @@ def load_api_app(application: str):
 
 def run():
     parser = argparse.ArgumentParser(
-        description="mullet - quick'n dirty SPA proxy",
-        add_help=False
+        description="mullet - quick'n dirty SPA proxy", add_help=False
     )
     parser.add_argument(
         "--help",
@@ -214,7 +218,7 @@ def run():
         "--application",
         help="WSGI Application",
         required=False,
-        default="main:app"
+        default="main:app",
     )
 
     parser.add_argument(
@@ -222,15 +226,11 @@ def run():
         "--frontend",
         help="frontend url or path (default: http://127.0.0.1:3000)",
         required=False,
-        default="http://127.0.0.1:3000"
+        default="http://127.0.0.1:3000",
     )
 
     parser.add_argument(
-        "-s",
-        "--slug",
-        help="api slug (default: /api)",
-        required=False,
-        default="/api"
+        "-s", "--slug", help="api slug (default: /api)", required=False, default="/api"
     )
 
     parser.add_argument(
@@ -238,7 +238,7 @@ def run():
         "--index",
         help="index file for static serving (default: index.html)",
         required=False,
-        default="index.html"
+        default="index.html",
     )
 
     parser.add_argument(
@@ -289,4 +289,6 @@ def run():
 
     debugger = not args.no_debug
     reloader = not args.no_reload
-    run_simple(args.host, args.port, mullet_app, use_debugger=debugger, use_reloader=reloader)
+    run_simple(
+        args.host, args.port, mullet_app, use_debugger=debugger, use_reloader=reloader
+    )
